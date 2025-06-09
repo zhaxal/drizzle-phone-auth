@@ -1,8 +1,16 @@
-import { integer, pgTable, varchar } from "drizzle-orm/pg-core";
+import { integer, pgTable, varchar, text } from "drizzle-orm/pg-core";
+import { user } from "./auth-schema";
 
-export const usersTable = pgTable("test_users", {
+// drizzle commands
+// npx drizzle-kit generate
+// npx drizzle-kit migrate
+// npx drizzle-kit studio --port=3000
+
+export const postsTable = pgTable("posts", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 255 }).notNull(),
-  age: integer().notNull(),
-  email: varchar({ length: 255 }).notNull().unique(),
+  title: varchar({ length: 255 }).notNull(),
+  content: varchar({ length: 1000 }).notNull(),
+  authorId: text()
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
 });
